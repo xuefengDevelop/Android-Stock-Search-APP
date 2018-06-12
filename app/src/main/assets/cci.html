@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"       type="text/javascript"></script>
+        <script src="https://code.highcharts.com/stock/highstock.js"></script>
+       <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+    </head>
+    <body>
+        <div id ="mytab"></div>
+    </body>
+    <script>
+         function init(val){
+        var url = "http://stockmarket.us-east-2.elasticbeanstalk.com/cci/"+val;
+        var oReq = new XMLHttpRequest();
+        oReq.addEventListener("load", reqListener);
+        oReq.open("GET", url,true);
+        oReq.send();
+         function reqListener(){
+             try{
+            var text = JSON.parse(this.responseText);
+            var parent = text['Technical Analysis: CCI'];
+            var smaDates = [];
+            var smaValues = [];
+            for(var i = 130;i>=0;i--){
+                var smaDate = Object.keys(parent)[i];
+                smaDates.push(smaDate.substring(5,7)+"/"+smaDate.substring(8,10));
+                smaValues.push(parseFloat(parent[smaDate]['CCI']));
+            }
+            var highchartsObjectcci = {
+                        chart: {
+                            zoomType: 'xy',
+                        },
+                        title: {
+                            text: 'Commodity Channel Index (CCI)'
+                        },
+                        subtitle: {
+                            useHTML: true,
+                            text: '<a target="_blank" href="https://www.alphavantage.co/" style="color:#0000EE;">Source: Alpha Vantage</a>'
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'SMA'
+                            },
+                        },
+                        xAxis: {
+                            categories:smaDates,
+                            tickInterval:5
+                        },
+                        legend: {
+                            enabled: true,
+                            floating: true,
+                            verticalAlign: 'bottom',
+                            align:'center',
+                            y:20
+                        },
+                        plotOptions: {
+                            series: {
+                                label: {
+                                    connectorAllowed: false
+                                },
+                                marker: {
+                                    enabled: true,
+                                    radius: 2,
+                                    symbol: 'square'
+                                }
+                            }
+                        },
+                        series: [{
+                            name: name,
+                            data: smaValues
+                        }],
+                        responsive: {
+                            rules: [{
+                                condition: {
+                                    maxWidth: 500
+                                },
+                                chartOptions: {
+                                    legend: {
+                                        layout: 'horizontal',
+                                        align: 'center',
+                                        verticalAlign: 'bottom'
+                                    }
+                                }
+                            }]
+                        }
+                };
+             Highcharts.chart('mytab',highchartsObjectcci);
+        var optionsStr = JSON.stringify(highchartsObjectcci),
+            dataString = encodeURI('async=true&type=jpeg&width=400&options=' + optionsStr);
+                    var exportUrl = 'http://export.highcharts.com/';
+            $.ajax({
+                type: 'POST',
+                data: dataString,
+                url: exportUrl,
+                success: function (response) {
+                    exportUrl= exportUrl+response;
+                    window.mytext.sharethis(exportUrl);
+                },
+                error: function (err) {
+                    debugger;
+                }
+            });}
+             catch(err){
+                 window.mytext.onErrorHandling("thiserrorShit");
+             }
+        }}
+    </script>
+</html>

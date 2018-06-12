@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"       type="text/javascript"></script>
+        <script src="https://code.highcharts.com/stock/highstock.js"></script>
+       <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+    </head>
+    <body>
+        <div id ="mytab"></div>
+    </body>
+    <script>
+        function init(val){
+        var url = "http://stockmarket.us-east-2.elasticbeanstalk.com/price/"+val;
+        var oReq = new XMLHttpRequest();
+        oReq.addEventListener("load", reqListener);
+        oReq.addEventListener("error", transferFailed);
+        oReq.addEventListener("abort", transferCanceled);
+        oReq.open("GET", url,true);
+        oReq.send();
+        function transferFailed(){
+            console.log("wo cao");
+             window.mytext.onErrorHandling();
+        }
+        function transferCanceled(){
+            console.log("wo cao");
+             window.mytext.onErrorHandling("hi");
+        }
+         function reqListener(){
+             try{
+            var text = JSON.parse(this.responseText);
+            text = text['Time Series (Daily)'];
+             var price = [];
+             var date =[];
+             var volume =[];
+                for(var i=130;i>=0;i--){
+                    price.push(parseFloat(text[Object.keys(text)[i]]['4. close']));
+                    var newDate = Object.keys(text)[i];
+                    date.push(newDate.substring(5,7)+"/"+newDate.substring(8,10));
+                    volume.push(parseFloat(text[Object.keys(text)[i]]['5. volume']));
+                }
+                    var highchartsObjectprice ={
+                    chart: {
+                        zoomType: 'xy',
+                        },
+                    title: {
+                        text: val+'Stock Price and Volume'
+                    },
+                    subtitle: {
+                    useHTML: true,
+                    text: '<a target="_blank" href="https://www.alphavantage.co/" style="color:#0000EE;">Source: Alpha Vantage</a>'
+                    },
+                    xAxis: [{
+                        categories:date,
+                        tickInterval:5
+                    }],
+                    yAxis: [{
+                        title: {
+                            text: 'Stock Price'
+                        },
+                        min:0
+                    },
+                    {
+                        title: {
+                        text: 'Volume',
+                        },
+                        maxPadding: 1.2,
+                        opposite:true
+                    }
+                    ],
+                    plotOptions: {
+                        area: {
+                        marker: {
+                        enabled: false,
+                        symbol: 'circle',
+                        radius: 2,
+                        states: {
+                        hover: {
+                            enabled: true
+                        }
+                        }
+                        }
+                    }
+                    },
+                    legend: {
+                        enabled: true,
+                        floating: true,
+                        verticalAlign: 'bottom',
+                        align:'center',
+                        y:20
+                    },
+                series: [{
+                    name: val,
+                    type: 'area',
+                    yAxis: 0,
+                    fillColor: '#E6E6FE',
+                    lineColor:'#1A24C1',
+                    color:'#1A24C1',
+                    lineWidth: 1,
+                    threshold: null,
+                    data: price,
+                }, {
+                name: val + ' Volume',
+                type: 'column',
+                yAxis: 1,
+                color:'#D62426',
+                data: volume
+                }]
+            };
+                Highcharts.chart('mytab', highchartsObjectprice);
+             var optionsStr = JSON.stringify(highchartsObjectprice),
+                    dataString = encodeURI('async=true&type=jpeg&width=400&options=' + optionsStr);
+                    var exportUrl = 'http://export.highcharts.com/';
+            $.ajax({
+                type: 'POST',
+                data: dataString,
+                url: exportUrl,
+                success: function (response) {
+                    exportUrl= exportUrl+response;
+                    window.mytext.sharethis(exportUrl);
+                },
+                error: function (err) {
+                    debugger;
+                }
+            });}
+             catch(err){
+                 window.mytext.onErrorHandling("thiserrorShit");
+             }
+        }}
+    </script>
+</html>

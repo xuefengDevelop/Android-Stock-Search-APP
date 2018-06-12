@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="stock_market_search">Stock Market Search</string>
+    <string name="get_quote">Get Quote</string>
+    <string name="clear">Clear</string>
+    <string name="autorefresh">AutoRefresh</string>
+    <string name="favourites">Favourites</string>
+    <string name="tab_one">Tab One</string>
+    <string name="tab_two">Tab Two</string>
+    <string name="tab_three">Tab Three</string>
+    <string name="todo">TODO</string>
+    <string name="facebook_app_id">169361180320894</string>
+    <string-array name="country_arrays">
+        <item>Sort by</item>
+        <item>Default</item>
+        <item>Symbol</item>
+        <item>Price</item>
+        <item>Change</item>
+    </string-array>
+    <string-array name="sortOrderby">
+        <item>Order</item>
+        <item>Descending</item>
+        <item>Ascending</item>
+    </string-array>
+    <string-array name="indicator_array">
+        <item>Price</item>
+        <item>SMA</item>
+        <item>EMA</item>
+        <item>STOCH</item>
+        <item>RSI</item>
+        <item>ADX</item>
+        <item>CCI</item>
+        <item>BBANDS</item>
+        <item>MACD</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main3">Main3Activity</string>
+    <string name="tab_text_1">CURRENT</string>
+    <string name="tab_text_2">HISTORICAL</string>
+    <string name="tab_text_3">NEWS</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_main_page">mainPageActivity</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+</resources>

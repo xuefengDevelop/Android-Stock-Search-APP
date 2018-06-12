@@ -1,0 +1,17 @@
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/one"
+        android:title="Remove From Favorites?" />
+
+    <item
+        android:id="@+id/two"
+        android:checkable="false"
+        android:title="yes" />
+
+    <item
+        android:id="@+id/three"
+        android:title="No" />
+          
+</menu>  
